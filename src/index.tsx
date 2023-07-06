@@ -22,13 +22,20 @@ const App = () => {
     startService();
   }, []);
 
-  const handleSubmitInput = () => {
+  const handleSubmitInput = async () => {
     if (!ref.current) {
       return;
     }
 
-    console.log(inputRaw);
     console.log(ref.current);
+
+    // transpile the inputRaw to js code
+    const result = await ref.current.transform(inputRaw, {
+      loader: "jsx",
+      target: "es2015",
+    });
+
+    setCode(result.code);
   };
 
   return (

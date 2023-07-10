@@ -41,6 +41,7 @@ export const unpkgPathPlugin = () => {
         if (args.path === "index.js") {
           return {
             loader: "jsx",
+            // hard code for the content of the index.js
             contents: `
               import message from './message';
               console.log(message);
@@ -49,6 +50,7 @@ export const unpkgPathPlugin = () => {
         } else {
           return {
             loader: "jsx",
+            // hard code for the content of message.js
             contents: 'export default "hi there!"',
           };
         }

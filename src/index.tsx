@@ -36,6 +36,7 @@ const App = () => {
 
     // transpile the inputRaw to js code
     const result = await ref.current.build({
+      // index.js will be the first file of bundling process
       entryPoints: ["index.js"],
       bundle: true,
       write: false,

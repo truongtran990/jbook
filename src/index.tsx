@@ -2,6 +2,7 @@ import * as esbuild from "esbuild-wasm";
 import { useState, useEffect, useRef } from "react";
 
 import { createRoot } from "react-dom/client";
+import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 
 const App = () => {
   const [inputRaw, setInputRaw] = useState("");
@@ -27,15 +28,22 @@ const App = () => {
       return;
     }
 
-    console.log(ref.current);
+    // // transpile the inputRaw to js code
+    // const result = await ref.current.transform(inputRaw, {
+    //   loader: "jsx",
+    //   target: "es2015",
+    // });
 
     // transpile the inputRaw to js code
-    const result = await ref.current.transform(inputRaw, {
-      loader: "jsx",
-      target: "es2015",
+    const result = await ref.current.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin()],
     });
 
-    setCode(result.code);
+    setCode(result.outputFiles[0].text);
+    console.log(result);
   };
 
   return (

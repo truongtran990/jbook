@@ -42,16 +42,11 @@ export const unpkgPathPlugin = () => {
           return {
             loader: "jsx",
             // hard code for the content of the index.js
+            // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              import message from './message';
+              import message from 'tiny-test-pkg';
               console.log(message);
             `,
-          };
-        } else {
-          return {
-            loader: "jsx",
-            // hard code for the content of message.js
-            contents: 'export default "hi there!"',
           };
         }
       });

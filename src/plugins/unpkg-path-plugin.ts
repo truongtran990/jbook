@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import * as esbuild from "esbuild-wasm";
 
 export const unpkgPathPlugin = () => {
@@ -22,10 +24,20 @@ export const unpkgPathPlugin = () => {
       trying to figure out where the file is stored or what the actual path to the file  
       */
       build.onResolve({ filter: /.*/ }, async (args: any) => {
-        console.log("onResole", args);
+        console.log("onResolve", args);
 
         // return that path
-        return { path: args.path, namespace: "a" };
+        if (args.path === "index.js") {
+          return {
+            path: args.path,
+            namespace: "a",
+          };
+        } else if (args.path === "tiny-test-pkg") {
+          return {
+            path: "https://unpkg.com/tiny-test-pkg@1.0.0/index.js",
+            namespace: "a",
+          };
+        }
       });
 
       /* 
@@ -44,11 +56,18 @@ export const unpkgPathPlugin = () => {
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              import message from 'tiny-test-pkg';
+              const message = require('tiny-test-pkg');
               console.log(message);
             `,
           };
         }
+
+        const { data } = await axios.get(args.path);
+        console.log("data: ", data);
+        return {
+          loader: "jsx",
+          contents: data,
+        };
       });
     },
   };

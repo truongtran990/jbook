@@ -33,6 +33,14 @@ export const unpkgPathPlugin = () => {
             namespace: "a",
           };
         }
+
+        if (args.path.includes("./") || args.path.includes("../")) {
+          return {
+            namespace: "a",
+            path: new URL(args.path, args.importer + "/")?.href,
+          };
+        }
+
         return {
           namespace: "a",
           path: `https://unpkg.com/${args.path}`,
@@ -61,7 +69,7 @@ export const unpkgPathPlugin = () => {
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              const message = require('tiny-test-pkg');
+              const message = require('medium-test-pkg');
               console.log(message);
             `,
           };

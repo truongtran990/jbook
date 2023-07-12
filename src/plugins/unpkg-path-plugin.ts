@@ -73,15 +73,16 @@ export const unpkgPathPlugin = () => {
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              const message = require('nested-test-pkg');
-              console.log(message);
+              import React, { useState } from 'react';
+            
+              console.log(React, useState);
             `,
           };
         }
 
         const { data, request } = await axios.get(args.path);
-        console.log("data: ", data);
-        console.log("request: ", request);
+        // console.log("data: ", data);
+        // console.log("request: ", request);
 
         return {
           loader: "jsx",

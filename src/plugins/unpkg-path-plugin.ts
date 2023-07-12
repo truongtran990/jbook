@@ -37,7 +37,11 @@ export const unpkgPathPlugin = () => {
         if (args.path.includes("./") || args.path.includes("../")) {
           return {
             namespace: "a",
-            path: new URL(args.path, args.importer + "/")?.href,
+            // path: new URL(args.path, args.importer + "/")?.href,
+            path: new URL(
+              args.path,
+              "https://unpkg.com" + args.resolveDir + "/"
+            )?.href,
           };
         }
 
@@ -69,17 +73,21 @@ export const unpkgPathPlugin = () => {
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              const message = require('medium-test-pkg');
+              const message = require('nested-test-pkg');
               console.log(message);
             `,
           };
         }
 
-        const { data } = await axios.get(args.path);
+        const { data, request } = await axios.get(args.path);
         console.log("data: ", data);
+        console.log("request: ", request);
+
         return {
           loader: "jsx",
           contents: data,
+          // we get the directory to the main file of library like this: https://unpkg.com/nested-test-pkg.com@17.0.1/src/index.js ==> /nested-test-pkg@1.0.0/src/
+          resolveDir: new URL("./", request.responseURL).pathname,
         };
       });
     },

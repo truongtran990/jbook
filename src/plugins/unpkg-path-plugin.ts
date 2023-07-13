@@ -100,7 +100,9 @@ export const unpkgPathPlugin = () => {
             
 
         */
-        const cachedResult = await fileCache.getItem(args.path);
+        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
+          args.path
+        );
 
         if (cachedResult) {
           return cachedResult;
@@ -110,7 +112,7 @@ export const unpkgPathPlugin = () => {
         // console.log("data: ", data);
         // console.log("request: ", request);
 
-        const result = {
+        const result: esbuild.OnLoadResult = {
           loader: "jsx",
           contents: data,
           // we get the directory to the main file of library like this: https://unpkg.com/nested-test-pkg.com@17.0.1/src/index.js ==> /nested-test-pkg@1.0.0/src/

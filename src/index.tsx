@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 
 const App = () => {
-  const [inputRaw, setInputRaw] = useState("");
+  const [rawInput, setRawInput] = useState("");
   const [code, setCode] = useState("");
 
   const ref = useRef<any>();
@@ -28,19 +28,19 @@ const App = () => {
       return;
     }
 
-    // // transpile the inputRaw to js code
-    // const result = await ref.current.transform(inputRaw, {
+    // // transpile the rawInput to js code
+    // const result = await ref.current.transform(rawInput, {
     //   loader: "jsx",
     //   target: "es2015",
     // });
 
-    // transpile the inputRaw to js code
+    // transpile the rawInput to js code
     const result = await ref.current.build({
       // index.js will be the first file of bundling process
       entryPoints: ["index.js"],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      plugins: [unpkgPathPlugin(rawInput)],
       define: {
         "process.env.NODE_ENV": "'production'",
         global: "window",
@@ -54,8 +54,8 @@ const App = () => {
   return (
     <div>
       <textarea
-        value={inputRaw}
-        onChange={(e) => setInputRaw(e.target.value)}
+        value={rawInput}
+        onChange={(e) => setRawInput(e.target.value)}
       ></textarea>
 
       <div>

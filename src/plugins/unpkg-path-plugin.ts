@@ -8,7 +8,7 @@ const fileCache = localforage.createInstance({
   name: "filecache",
 });
 
-export const unpkgPathPlugin = () => {
+export const unpkgPathPlugin = (inputCode: string) => {
   // return a object is a plugin that works inside of its esbuild.
   /* 
   return an object
@@ -78,12 +78,7 @@ export const unpkgPathPlugin = () => {
             loader: "jsx",
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
-            contents: `
-              import React, { useState } from 'react-select';
-              import ReactDOM from 'react-dom';
-              
-              console.log(React, useState);
-            `,
+            contents: inputCode,
           };
         }
 

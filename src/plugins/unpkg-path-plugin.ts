@@ -3,12 +3,12 @@ import localforage from "localforage";
 
 import * as esbuild from "esbuild-wasm";
 
-const fileCache = localforage.createInstance({
+export const fileCache = localforage.createInstance({
   // configuration object
   name: "filecache",
 });
 
-export const unpkgPathPlugin = (inputCode: string) => {
+export const unpkgPathPlugin = () => {
   // return a object is a plugin that works inside of its esbuild.
   /* 
   return an object
@@ -61,63 +61,6 @@ export const unpkgPathPlugin = (inputCode: string) => {
             namespace: "a",
           };
         } */
-      });
-
-      /* 
-      defining listeners, overriding the es natural way of loading up a file, which is to just read it directly off a file system
-      instead: dont try to load up this file off the file system, were just going to return an object for you immediately that contains the contents of that file we're trying to load.
-      */
-      build.onLoad({ filter: /.*/ }, async (args: any) => {
-        console.log("onLoad", args);
-
-        /* 
-        if the file is index.js, don't let it try to load up something on the filesystem instead, we're loading for you.
-        */
-        if (args.path === "index.js") {
-          return {
-            loader: "jsx",
-            // hard code for the content of the index.js
-            // we have a problem at here: that is we can not import package direct from npm
-            contents: inputCode,
-          };
-        }
-
-        /* 
-        1. Check to see if we have already fetched this file
-        If it is in the cache
-
-
-          1.a YES
-            return is immediately
-          
-          1.b NO
-            + store response in cache
-            
-
-        */
-        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
-          args.path
-        );
-
-        if (cachedResult) {
-          return cachedResult;
-        }
-
-        const { data, request } = await axios.get(args.path);
-        // console.log("data: ", data);
-        // console.log("request: ", request);
-
-        const result: esbuild.OnLoadResult = {
-          loader: "jsx",
-          contents: data,
-          // we get the directory to the main file of library like this: https://unpkg.com/nested-test-pkg.com@17.0.1/src/index.js ==> /nested-test-pkg@1.0.0/src/
-          resolveDir: new URL("./", request.responseURL).pathname,
-        };
-
-        // set the fetched data into localforage
-        await fileCache.setItem(args.path, result);
-
-        return result;
       });
     },
   };

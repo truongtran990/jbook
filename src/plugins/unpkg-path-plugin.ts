@@ -29,28 +29,28 @@ export const unpkgPathPlugin = (inputCode: string) => {
       /* 
       trying to figure out where the file is stored or what the actual path to the file  
       */
+      //  Handle root entry file of index.js
+      build.onResolve({ filter: /(^index\.js$)/ }, () => {
+        console.log("onResolve index.js");
+        return {
+          path: "index.js",
+          namespace: "a",
+        };
+      });
+
+      // Handle relative paths in module
+      build.onResolve({ filter: /^\.+\// }, (args: any) => {
+        console.log("onResolve", args);
+        return {
+          namespace: "a",
+          path: new URL(args.path, "https://unpkg.com" + args.resolveDir + "/")
+            ?.href,
+        };
+      });
+
+      // handle main file of module
       build.onResolve({ filter: /.*/ }, async (args: any) => {
         console.log("onResolve", args);
-
-        // return that path
-        if (args.path === "index.js") {
-          return {
-            path: args.path,
-            namespace: "a",
-          };
-        }
-
-        if (args.path.includes("./") || args.path.includes("../")) {
-          return {
-            namespace: "a",
-            // path: new URL(args.path, args.importer + "/")?.href,
-            path: new URL(
-              args.path,
-              "https://unpkg.com" + args.resolveDir + "/"
-            )?.href,
-          };
-        }
-
         return {
           namespace: "a",
           path: `https://unpkg.com/${args.path}`,

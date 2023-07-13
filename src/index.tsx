@@ -1,11 +1,12 @@
 import * as esbuild from "esbuild-wasm";
 import { useState, useEffect, useRef } from "react";
-
 import { createRoot } from "react-dom/client";
+
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
-  const [inputRaw, setInputRaw] = useState("");
+  const [rawInput, setRawInput] = useState("");
   const [code, setCode] = useState("");
 
   const ref = useRef<any>();
@@ -28,19 +29,14 @@ const App = () => {
       return;
     }
 
-    // // transpile the inputRaw to js code
-    // const result = await ref.current.transform(inputRaw, {
-    //   loader: "jsx",
-    //   target: "es2015",
-    // });
-
-    // transpile the inputRaw to js code
+    // transpile the rawInput to js code
     const result = await ref.current.build({
       // index.js will be the first file of bundling process
       entryPoints: ["index.js"],
       bundle: true,
       write: false,
-      plugins: [unpkgPathPlugin()],
+      // plugins go from left to write onResolve -> onLoad
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawInput)],
       define: {
         "process.env.NODE_ENV": "'production'",
         global: "window",
@@ -54,8 +50,8 @@ const App = () => {
   return (
     <div>
       <textarea
-        value={inputRaw}
-        onChange={(e) => setInputRaw(e.target.value)}
+        value={rawInput}
+        onChange={(e) => setRawInput(e.target.value)}
       ></textarea>
 
       <div>

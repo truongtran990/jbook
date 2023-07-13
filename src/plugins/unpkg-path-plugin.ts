@@ -1,6 +1,12 @@
 import axios from "axios";
+import localforage from "localforage";
 
 import * as esbuild from "esbuild-wasm";
+
+const fileCache = localforage.createInstance({
+  // configuration object
+  name: "filecache",
+});
 
 export const unpkgPathPlugin = () => {
   // return a object is a plugin that works inside of its esbuild.
@@ -73,23 +79,48 @@ export const unpkgPathPlugin = () => {
             // hard code for the content of the index.js
             // we have a problem at here: that is we can not import package direct from npm
             contents: `
-              import React, { useState } from 'react';
-            
+              import React, { useState } from 'react-select';
+              import ReactDOM from 'react-dom';
+              
               console.log(React, useState);
             `,
           };
+        }
+
+        /* 
+        1. Check to see if we have already fetched this file
+        If it is in the cache
+
+
+          1.a YES
+            return is immediately
+          
+          1.b NO
+            + store response in cache
+            
+
+        */
+        const cachedResult = await fileCache.getItem(args.path);
+
+        if (cachedResult) {
+          return cachedResult;
         }
 
         const { data, request } = await axios.get(args.path);
         // console.log("data: ", data);
         // console.log("request: ", request);
 
-        return {
+        const result = {
           loader: "jsx",
           contents: data,
           // we get the directory to the main file of library like this: https://unpkg.com/nested-test-pkg.com@17.0.1/src/index.js ==> /nested-test-pkg@1.0.0/src/
           resolveDir: new URL("./", request.responseURL).pathname,
         };
+
+        // set the fetched data into localforage
+        await fileCache.setItem(args.path, result);
+
+        return result;
       });
     },
   };

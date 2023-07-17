@@ -11,6 +11,16 @@ export const fetchPlugin = (inputCode: string) => {
   return {
     name: "fetch-plugin",
     setup(build: esbuild.PluginBuild) {
+      /* 
+      HOW onLoad function works behind the scenes ???
+
+      1. we register function that to be executed, and that function only ran when we have the file we try to resolve or load up that matches that given filter
+
+      2. we are not required to return a result from an onLoad function
+
+      3. if onLoad function does not return an real object -> the execution is going to continue on the next onLoad function that matching filter
+      */
+
       // exactly load index.js file
       build.onLoad({ filter: /(^index\.js$)/ }, () => {
         console.log("onLoad");
@@ -20,26 +30,30 @@ export const fetchPlugin = (inputCode: string) => {
         };
       });
 
-      // load file which is ended with .css
-      build.onLoad({ filter: /\.css$/ }, async (args: any) => {
-        console.log("onLoad", args);
+      build.onLoad({ filter: /.*/ }, async (args: any) => {
+        console.log("I ran but didn't do any thing");
         const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
           args.path
         );
 
+        /* 
+        if not return object the execution is going to continue on the next onLoad function that matching filter
+        */
         if (cachedResult) {
           return cachedResult;
         }
+      });
+
+      // load file which is ended with .css
+      build.onLoad({ filter: /\.css$/ }, async (args: any) => {
+        console.log("onLoad", args);
 
         const { data, request } = await axios.get(args.path);
 
         const escaped = data
-          // remove new line by ""
-          .replace(/\n/g, "")
-          // replace " => \"
-          .replace(/"/g, '\\"')
-          // replace ' => \'
-          .replace(/'/g, "\\'");
+          .replace(/\n/g, "") // remove new line by ""
+          .replace(/"/g, '\\"') // replace " => \"
+          .replace(/'/g, "\\'"); // replace ' => \'
 
         const contents = `
           const style = document.createElement('style');
@@ -62,14 +76,6 @@ export const fetchPlugin = (inputCode: string) => {
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
         console.log("onLoad", args);
-
-        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
-          args.path
-        );
-
-        if (cachedResult) {
-          return cachedResult;
-        }
 
         const { data, request } = await axios.get(args.path);
 

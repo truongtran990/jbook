@@ -21,21 +21,31 @@ export const fetchPlugin = (inputCode: string) => {
           };
         }
 
-        const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
-          args.path
-        );
+        // const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
+        //   args.path
+        // );
 
-        if (cachedResult) {
-          return cachedResult;
-        }
+        // if (cachedResult) {
+        //   return cachedResult;
+        // }
 
         const { data, request } = await axios.get(args.path);
-        // console.log("data: ", data);
-        // console.log("request: ", request);
+
+        const fileType = args.path.match(/.css$/) ? "css" : "jsx";
+        console.log("fileType: ", fileType);
+
+        const contents =
+          fileType === "css"
+            ? `
+          const style = document.createElement('style');
+          style.innerText = 'body {background-color: "red"}';
+          document.head.appendChild(style);
+        `
+            : data;
 
         const result: esbuild.OnLoadResult = {
           loader: "jsx",
-          contents: data,
+          contents,
           // we get the directory to the main file of library like this: https://unpkg.com/nested-test-pkg.com@17.0.1/src/index.js ==> /nested-test-pkg@1.0.0/src/
           resolveDir: new URL("./", request.responseURL).pathname,
         };

@@ -34,11 +34,19 @@ export const fetchPlugin = (inputCode: string) => {
         const fileType = args.path.match(/.css$/) ? "css" : "jsx";
         console.log("fileType: ", fileType);
 
+        const escaped = data
+          // remove new line by ""
+          .replace(/\n/g, "")
+          // replace " => \"
+          .replace(/"/g, '\\"')
+          // replace ' => \'
+          .replace(/'/g, "\\'");
+
         const contents =
           fileType === "css"
             ? `
           const style = document.createElement('style');
-          style.innerText = 'body {background-color: "red"}';
+          style.innerText = '${escaped}';
           document.head.appendChild(style);
         `
             : data;

@@ -45,6 +45,12 @@ const App = () => {
 
     setCode(result.outputFiles[0].text);
     console.log(result);
+
+    try {
+      eval(result.outputFiles[0].text);
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
@@ -52,6 +58,7 @@ const App = () => {
       <textarea
         value={rawInput}
         onChange={(e) => setRawInput(e.target.value)}
+        placeholder="Starting write your code!!!"
       ></textarea>
 
       <div>

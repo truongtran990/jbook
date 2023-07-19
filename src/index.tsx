@@ -66,10 +66,19 @@ const App = () => {
       </div>
       <pre>{code}</pre>
 
-      <iframe title="iframePreview" src="/test.html"></iframe>
+      <iframe
+        title="iframePreview"
+        srcDoc={iframeHtml}
+        sandbox=""
+        // src="http://nothing.localhost:3000/iframe.html"
+      ></iframe>
     </div>
   );
 };
+
+const iframeHtml = `
+  <h2>Local HTML doc</h2>
+`;
 
 // Get the element that will render react app
 const container = document.getElementById("root");

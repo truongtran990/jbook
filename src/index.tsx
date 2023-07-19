@@ -10,6 +10,7 @@ const App = () => {
   const [code, setCode] = useState("");
 
   const ref = useRef<any>();
+  const iframeRef = useRef<any>();
 
   // initialize esbuild
   const startService = async () => {
@@ -43,13 +44,27 @@ const App = () => {
       },
     });
 
-    setCode(result.outputFiles[0].text);
+    // setCode(result.outputFiles[0].text);
+
+    iframeRef.current.contentWindow.postMessage(
+      result.outputFiles[0].text,
+      "*"
+    );
   };
 
   const iframeHtml = `
-  <script>
-    ${code}
-  </script>
+    <html>
+      <head>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener("message", event => {
+            eval(event.data);
+          }, false);
+        </script>
+      </body>
+    </html>
   `;
 
   return (
@@ -66,6 +81,7 @@ const App = () => {
       <pre>{code}</pre>
 
       <iframe
+        ref={iframeRef}
         title="iframePreview"
         // passing the transpiling code into iframe to execute
         srcDoc={iframeHtml}

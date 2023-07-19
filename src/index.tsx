@@ -30,6 +30,8 @@ const App = () => {
       return;
     }
 
+    iframeRef.current.srcdoc = iframeHtml;
+
     // transpile the rawInput to js code
     const result = await ref.current.build({
       // index.js will be the first file of bundling process
@@ -60,7 +62,15 @@ const App = () => {
         <div id="root"></div>
         <script>
           window.addEventListener("message", event => {
-            eval(event.data);
+            
+            try {
+              eval(event.data);
+            } catch (error) {
+              const rootEl = document.querySelector("#root");
+              rootEl.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + error +  '</div>';
+
+              console.error(error);
+            }
           }, false);
         </script>
       </body>

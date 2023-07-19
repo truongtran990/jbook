@@ -44,14 +44,13 @@ const App = () => {
     });
 
     setCode(result.outputFiles[0].text);
-    console.log(result);
-
-    try {
-      eval(result.outputFiles[0].text);
-    } catch (error) {
-      alert(error);
-    }
   };
+
+  const iframeHtml = `
+  <script>
+    ${code}
+  </script>
+  `;
 
   return (
     <div>
@@ -68,17 +67,18 @@ const App = () => {
 
       <iframe
         title="iframePreview"
+        // passing the transpiling code into iframe to execute
         srcDoc={iframeHtml}
-        sandbox=""
+        sandbox="allow-scripts"
         // src="http://nothing.localhost:3000/iframe.html"
       ></iframe>
     </div>
   );
 };
 
-const iframeHtml = `
-  <h2>Local HTML doc</h2>
-`;
+// const iframeHtml = `
+//   <h2>Local HTML doc</h2>
+// `;
 
 // Get the element that will render react app
 const container = document.getElementById("root");

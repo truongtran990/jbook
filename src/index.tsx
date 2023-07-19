@@ -7,9 +7,9 @@ import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
   const [rawInput, setRawInput] = useState("");
-  const [code, setCode] = useState("");
 
   const ref = useRef<any>();
+  const iframeRef = useRef<any>();
 
   // initialize esbuild
   const startService = async () => {
@@ -29,6 +29,8 @@ const App = () => {
       return;
     }
 
+    iframeRef.current.srcdoc = iframeHtml;
+
     // transpile the rawInput to js code
     const result = await ref.current.build({
       // index.js will be the first file of bundling process
@@ -43,24 +45,64 @@ const App = () => {
       },
     });
 
-    setCode(result.outputFiles[0].text);
-    console.log(result);
+    // setCode(result.outputFiles[0].text);
+
+    iframeRef.current.contentWindow.postMessage(
+      result.outputFiles[0].text,
+      "*"
+    );
   };
+
+  const iframeHtml = `
+    <html>
+      <head>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener("message", event => {
+            
+            try {
+              eval(event.data);
+            } catch (error) {
+              const rootEl = document.querySelector("#root");
+              rootEl.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + error +  '</div>';
+
+              console.error(error);
+            }
+          }, false);
+        </script>
+      </body>
+    </html>
+  `;
 
   return (
     <div>
       <textarea
         value={rawInput}
         onChange={(e) => setRawInput(e.target.value)}
+        placeholder="Starting write your code!!!"
       ></textarea>
 
       <div>
         <button onClick={handleSubmitInput}>Submit</button>
       </div>
-      <pre>{code}</pre>
+
+      <iframe
+        ref={iframeRef}
+        title="iframePreview"
+        // passing the transpiling code into iframe to execute
+        srcDoc={iframeHtml}
+        sandbox="allow-scripts"
+        // src="http://nothing.localhost:3000/iframe.html"
+      ></iframe>
     </div>
   );
 };
+
+// const iframeHtml = `
+//   <h2>Local HTML doc</h2>
+// `;
 
 // Get the element that will render react app
 const container = document.getElementById("root");

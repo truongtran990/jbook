@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
+import CodeEditor from "./components/code-editor";
 
 const App = () => {
   const [rawInput, setRawInput] = useState("");
@@ -78,6 +79,7 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditor />
       <textarea
         value={rawInput}
         onChange={(e) => setRawInput(e.target.value)}

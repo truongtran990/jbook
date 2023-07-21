@@ -6,12 +6,13 @@ import "bulmaswatch/superhero/bulmaswatch.min.css";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
 import CodeEditor from "./components/code-editor";
+import Preview from "./components/preview";
 
 const App = () => {
   const [rawInput, setRawInput] = useState("");
+  const [code, setCode] = useState("");
 
   const ref = useRef<any>();
-  const iframeRef = useRef<any>();
 
   // initialize esbuild
   const startService = async () => {
@@ -31,8 +32,6 @@ const App = () => {
       return;
     }
 
-    iframeRef.current.srcdoc = iframeHtml;
-
     // transpile the rawInput to js code
     const result = await ref.current.build({
       // index.js will be the first file of bundling process
@@ -47,36 +46,8 @@ const App = () => {
       },
     });
 
-    // setCode(result.outputFiles[0].text);
-
-    iframeRef.current.contentWindow.postMessage(
-      result.outputFiles[0].text,
-      "*"
-    );
+    setCode(result.outputFiles[0].text);
   };
-
-  const iframeHtml = `
-    <html>
-      <head>
-      </head>
-      <body>
-        <div id="root"></div>
-        <script>
-          window.addEventListener("message", event => {
-            
-            try {
-              eval(event.data);
-            } catch (error) {
-              const rootEl = document.querySelector("#root");
-              rootEl.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + error +  '</div>';
-
-              console.error(error);
-            }
-          }, false);
-        </script>
-      </body>
-    </html>
-  `;
 
   return (
     <div>
@@ -86,24 +57,12 @@ const App = () => {
           setRawInput(value);
         }}
       />
-      <textarea
-        value={rawInput}
-        onChange={(e) => setRawInput(e.target.value)}
-        placeholder="Starting write your code!!!"
-      ></textarea>
 
       <div>
         <button onClick={handleSubmitInput}>Submit</button>
       </div>
 
-      <iframe
-        ref={iframeRef}
-        title="iframePreview"
-        // passing the transpiling code into iframe to execute
-        srcDoc={iframeHtml}
-        sandbox="allow-scripts"
-        // src="http://nothing.localhost:3000/iframe.html"
-      ></iframe>
+      <Preview code={code} />
     </div>
   );
 };

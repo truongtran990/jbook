@@ -1,36 +1,13 @@
-import { useState } from "react";
 import { createRoot } from "react-dom/client";
-import "bulmaswatch/superhero/bulmaswatch.min.css";
 
-import CodeEditor from "./components/code-editor";
-import Preview from "./components/preview";
-import bundle from "./bundler";
+import "bulmaswatch/superhero/bulmaswatch.min.css";
+import CodeCell from "./components/code-cell";
 
 const App = () => {
-  const [rawInput, setRawInput] = useState("");
-  const [code, setCode] = useState("");
-
-  const handleSubmitInput = async () => {
-    // transpile the rawInput to js code
-    const output = await bundle(rawInput);
-
-    setCode(output);
-  };
-
   return (
     <div>
-      <CodeEditor
-        initialValue="const a = 1;"
-        onChange={(value) => {
-          setRawInput(value);
-        }}
-      />
-
-      <div>
-        <button onClick={handleSubmitInput}>Submit</button>
-      </div>
-
-      <Preview code={code} />
+      <CodeCell />
+      <CodeCell />
     </div>
   );
 };

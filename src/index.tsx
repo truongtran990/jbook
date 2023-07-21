@@ -1,10 +1,7 @@
-import * as esbuild from "esbuild-wasm";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "bulmaswatch/superhero/bulmaswatch.min.css";
 
-import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
-import { fetchPlugin } from "./plugins/fetch-plugin";
 import CodeEditor from "./components/code-editor";
 import Preview from "./components/preview";
 import bundle from "./bundler";

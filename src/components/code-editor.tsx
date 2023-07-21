@@ -41,7 +41,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
 
   return (
     <div>
-      <button onClick={handleFormat}>Format</button>
+      <button
+        className="button button-format is-primary is-small"
+        onClick={handleFormat}
+      >
+        Format
+      </button>
       <MonacoEditor
         options={{
           wordWrap: "on",

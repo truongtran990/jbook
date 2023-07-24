@@ -80,7 +80,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         }}
         language="javascript"
         theme="dark"
-        height="500px"
+        height="100%"
         value={initialValue}
         editorDidMount={handleEditorDidMount}
       />

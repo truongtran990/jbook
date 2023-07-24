@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CodeEditor from "./code-editor";
 import Preview from "./preview";
@@ -9,12 +9,19 @@ const CodeCell = () => {
   const [rawInput, setRawInput] = useState("");
   const [code, setCode] = useState("");
 
-  const handleSubmitInput = async () => {
-    // transpile the rawInput to js code
-    const output = await bundle(rawInput);
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      // transpile the rawInput to js code
+      const output = await bundle(rawInput);
 
-    setCode(output);
-  };
+      setCode(output);
+    }, 1000);
+
+    // the return statement will be called automatically the next time useeffect is called
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [rawInput]);
 
   return (
     <Resizable direction="vertical">

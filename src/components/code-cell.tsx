@@ -15,7 +15,7 @@ const CodeCell = () => {
       const output = await bundle(rawInput);
 
       setCode(output);
-    }, 1000);
+    }, 750);
 
     // the return statement will be called automatically the next time useeffect is called
     return () => {

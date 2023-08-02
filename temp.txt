@@ -34,3 +34,6 @@ interface ResizableProps {
 setTimeout(() => {
   console.lasdf("a;sjdf;alsf");
 }, 20);
+
+
+npm install --save-exact @uiw/react-md-editor@2.1.1 --legacy-peer-deps

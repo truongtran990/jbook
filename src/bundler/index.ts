@@ -13,19 +13,23 @@ const bundle = async (rawCode: string) => {
     });
   }
 
-  const result = await service.build({
-    // index.js will be the first file of bundling process
-    entryPoints: ["index.js"],
-    bundle: true,
-    write: false,
-    // plugins go from left to write onResolve -> onLoad
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-    define: {
-      "process.env.NODE_ENV": "'production'",
-      global: "window",
-    },
-  });
-  return result.outputFiles[0].text;
+  try {
+    const result = await service.build({
+      // index.js will be the first file of bundling process
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      // plugins go from left to write onResolve -> onLoad
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      define: {
+        "process.env.NODE_ENV": "'production'",
+        global: "window",
+      },
+    });
+    return { code: result.outputFiles[0].text, err: "" };
+  } catch (error: any) {
+    return { code: "", err: error.message };
+  }
 };
 
 export default bundle;

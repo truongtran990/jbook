@@ -7,6 +7,7 @@ import Resizable from "./resizable";
 
 const CodeCell = () => {
   const [rawInput, setRawInput] = useState("");
+  const [error, setError] = useState("");
   const [code, setCode] = useState("");
 
   useEffect(() => {
@@ -14,7 +15,8 @@ const CodeCell = () => {
       // transpile the rawInput to js code
       const output = await bundle(rawInput);
 
-      setCode(output);
+      setCode(output.code);
+      setError(output.err);
     }, 1000);
 
     // the return statement will be called automatically the next time useeffect is called
@@ -37,7 +39,7 @@ const CodeCell = () => {
             }}
           />
         </Resizable>
-        <Preview code={code} />
+        <Preview code={code} err={error} />
       </div>
     </Resizable>
   );

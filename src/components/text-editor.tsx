@@ -12,10 +12,9 @@ const TextEditor: React.FC = () => {
         event.target &&
         mdEditorRef.current.contains(event.target as Node)
       ) {
-        console.log("element clicked is inside the editor");
         return;
       }
-      console.log("element clicked is not inside the editor");
+
       setIsEditing(false);
     };
 

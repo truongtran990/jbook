@@ -7,6 +7,8 @@ const TextEditor: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const mdEditorRef = useRef<HTMLDivElement | null>(null);
 
+  const [value, setValue] = useState("# Header");
+
   useEffect(() => {
     const listener = (event: MouseEvent) => {
       if (
@@ -31,13 +33,15 @@ const TextEditor: React.FC = () => {
   if (isEditing) {
     return (
       <div className="text-editor" ref={mdEditorRef}>
-        <MDEditor />
+        <MDEditor value={value} onChange={(v) => setValue(v || "")} />
       </div>
     );
   }
   return (
-    <div className="text-editor" onClick={() => setIsEditing(true)}>
-      <MDEditor.Markdown source={"# Header"} />
+    <div className="text-editor card" onClick={() => setIsEditing(true)}>
+      <div className="card-content">
+        <MDEditor.Markdown source={value} />
+      </div>
     </div>
   );
 };

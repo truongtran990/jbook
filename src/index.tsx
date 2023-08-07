@@ -1,15 +1,20 @@
 import { createRoot } from "react-dom/client";
 
 import "bulmaswatch/superhero/bulmaswatch.min.css";
+import { Provider } from "react-redux";
+
 import CodeCell from "./components/code-cell";
 import TextEditor from "./components/text-editor";
+import { store } from "./state";
 
 const App = () => {
   return (
-    <div>
-      {/* <CodeCell /> */}
-      <TextEditor />
-    </div>
+    <Provider store={store}>
+      <div>
+        {/* <CodeCell /> */}
+        <TextEditor />
+      </div>
+    </Provider>
   );
 };
 

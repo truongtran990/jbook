@@ -6,13 +6,17 @@ import { Provider } from "react-redux";
 import CodeCell from "./components/code-cell";
 import TextEditor from "./components/text-editor";
 import { store } from "./state";
+import CellList from "./components/cell-list";
 
 const App = () => {
   return (
     <Provider store={store}>
       <div>
         {/* <CodeCell /> */}
-        <TextEditor />
+        {/* <TextEditor /> */}
+        <div>
+          <CellList></CellList>
+        </div>
       </div>
     </Provider>
   );

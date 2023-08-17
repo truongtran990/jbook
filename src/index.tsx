@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 
 import "bulmaswatch/superhero/bulmaswatch.min.css";
 import { Provider } from "react-redux";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import CodeCell from "./components/code-cell";
 import TextEditor from "./components/text-editor";

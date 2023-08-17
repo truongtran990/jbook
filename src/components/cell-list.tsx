@@ -7,7 +7,7 @@ const CellList: React.FC = () => {
     return order.map((id: string) => data[id]);
   });
 
-  const renderedCells = cells.map((cell) => (
+  const renderedCells = cells.map((cell: any) => (
     <CellListItem key={cell.id} cell={cell} />
   ));
 

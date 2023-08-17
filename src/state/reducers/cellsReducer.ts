@@ -36,6 +36,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       return state;
     case ActionType.MOVE_CELL:
       const { direction } = action.payload;
+      console.log("direction", direction);
 
       const index = state.order.findIndex((id) => id === action.payload.id);
       const targetIndex = direction === "up" ? index - 1 : index + 1;

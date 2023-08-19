@@ -36,6 +36,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       return state;
     case ActionType.MOVE_CELL:
       const { direction } = action.payload;
+      console.log("direction", direction);
 
       const index = state.order.findIndex((id) => id === action.payload.id);
       const targetIndex = direction === "up" ? index - 1 : index + 1;
@@ -47,7 +48,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       state.order[index] = state.order[targetIndex];
       state.order[targetIndex] = action.payload.id;
       return state;
-    case ActionType.INSERT_CELL_BEFORE:
+    case ActionType.INSERT_CELL_AFTER:
       // initial new cell which will be inserted
       const cell: Cell = {
         id: randomId(),
@@ -64,9 +65,9 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
       );
 
       if (foundIndex < 0) {
-        state.order.push(cell.id);
+        state.order.unshift(cell.id);
       } else {
-        state.order.splice(foundIndex, 0, cell.id);
+        state.order.splice(foundIndex + 1, 0, cell.id);
       }
 
       return state;

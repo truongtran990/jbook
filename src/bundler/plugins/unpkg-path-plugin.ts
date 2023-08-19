@@ -1,4 +1,3 @@
-import axios from "axios";
 import localforage from "localforage";
 
 import * as esbuild from "esbuild-wasm";

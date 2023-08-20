@@ -1,3 +1,5 @@
+import { Dispatch } from "redux";
+
 import { ActionType } from "../action-types";
 import {
   MoveCellAction,
@@ -5,8 +7,12 @@ import {
   InsertCellAfterAction,
   UpdateCellAction,
   Direction,
+  BundleCompleteAction,
+  BundleStartAction,
+  Action,
 } from "../actions";
 import { CellTypes } from "../cell";
+import bundle from "../../bundler";
 
 // Here are action creator functions, which return the perspective action
 export const updateCell = (id: string, content: string): UpdateCellAction => {
@@ -18,12 +24,14 @@ export const updateCell = (id: string, content: string): UpdateCellAction => {
     },
   };
 };
+
 export const deleteCell = (id: string): DeleteCellAction => {
   return {
     type: ActionType.DELETE_CELL,
     payload: id,
   };
 };
+
 export const moveCell = (id: string, direction: Direction): MoveCellAction => {
   return {
     type: ActionType.MOVE_CELL,
@@ -33,6 +41,7 @@ export const moveCell = (id: string, direction: Direction): MoveCellAction => {
     },
   };
 };
+
 export const insertCellAfter = (
   id: string | null,
   type: CellTypes
@@ -43,5 +52,26 @@ export const insertCellAfter = (
       id,
       type,
     },
+  };
+};
+
+export const createBundle = (cellId: string, input: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.BUNDLE_START,
+      payload: {
+        cellId,
+      },
+    });
+
+    const result = await bundle(input);
+
+    dispatch({
+      type: ActionType.BUNDLE_COMPLETE,
+      payload: {
+        cellId,
+        bundle: result,
+      },
+    });
   };
 };

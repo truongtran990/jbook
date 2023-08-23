@@ -25,14 +25,14 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
     const cumulativeCode = [
       `
-        import React from 'react';
-        import ReactDOM from 'react-dom';
+        import _React from 'react';
+        import _ReactDOM from 'react-dom';
         const show = (value) => {
           const root = document.querySelector('#root');
           if (typeof value === 'object') {
             /*Check if the value if the jsx element or not*/
             if (value.$$typeof && value.props) {
-              ReactDOM.render(value, root)
+              _ReactDOM.render(value, root)
             } else {
               root.innerHTML = JSON.stringify(value);
             }

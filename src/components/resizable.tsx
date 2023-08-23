@@ -21,7 +21,6 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
         clearTimeout(timer);
       }
       timer = setTimeout(() => {
-        console.log(window.innerWidth, window.innerHeight);
         setInnerHeight(window.innerHeight);
         setInnerWidth(window.innerWidth);
 
@@ -46,7 +45,6 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       maxConstraints: [innerWidth * 0.8, Infinity],
       minConstraints: [innerWidth * 0.2, Infinity],
       onResizeStop: (event, data) => {
-        console.log(data);
         setWidth(data.size.width);
       },
     };

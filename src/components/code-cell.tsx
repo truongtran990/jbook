@@ -23,28 +23,36 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     const { data, order } = state.cells;
     const orderedCells = order.map((id: string) => data[id]);
 
-    const cumulativeCode = [
-      `
-        import _React from 'react';
-        import _ReactDOM from 'react-dom';
-        const show = (value) => {
-          const root = document.querySelector('#root');
-          if (typeof value === 'object') {
-            /*Check if the value if the jsx element or not*/
-            if (value.$$typeof && value.props) {
-              _ReactDOM.render(value, root)
-            } else {
-              root.innerHTML = JSON.stringify(value);
-            }
+    const showFunc = `
+      import _React from 'react';
+      import _ReactDOM from 'react-dom';
+      var show = (value) => {
+        console.log('show is called')
+        const root = document.querySelector('#root');
+        if (typeof value === 'object') {
+          /*Check if the value if the jsx element or not*/
+          if (value.$$typeof && value.props) {
+            _ReactDOM.render(value, root)
           } else {
-            root.innerHTML = value;
+            root.innerHTML = JSON.stringify(value);
           }
-        }  
-      `,
-    ];
+        } else {
+          root.innerHTML = value;
+        }
+      }
+    `;
+    const showFuncNoOp = "var show = () => {}";
+
+    const cumulativeCode = [];
 
     for (const c of orderedCells) {
       if (c.type === "code") {
+        /* logic to check if the currentthe current cell is the cell to run the code */
+        if (c.id === cell.id) {
+          cumulativeCode.push(showFunc);
+        } else {
+          cumulativeCode.push(showFuncNoOp);
+        }
         cumulativeCode.push(c.content);
       }
       if (c.id === cell.id) {
@@ -54,8 +62,6 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
 
     return cumulativeCode;
   });
-
-  console.log("cumulativeCode", cumulativeCode);
 
   useEffect(() => {
     // for the first initial bundle

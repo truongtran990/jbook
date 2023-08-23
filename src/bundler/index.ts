@@ -26,6 +26,7 @@ const bundle = async (rawCode: string) => {
         global: "window",
       },
       //  _React.createElement -> React.createElement
+      // ref here: https://esbuild.github.io/api/#jsx-factory
       jsxFactory: "_React.createElement",
       jsxFragment: "_React.Fragment",
     });

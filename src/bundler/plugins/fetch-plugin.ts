@@ -23,7 +23,6 @@ export const fetchPlugin = (inputCode: string) => {
 
       // exactly load index.js file
       build.onLoad({ filter: /(^index\.js$)/ }, () => {
-        console.log("onLoad");
         return {
           loader: "jsx",
           contents: inputCode,
@@ -31,7 +30,6 @@ export const fetchPlugin = (inputCode: string) => {
       });
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
-        console.log("I ran but didn't do any thing");
         const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
           args.path
         );
@@ -46,8 +44,6 @@ export const fetchPlugin = (inputCode: string) => {
 
       // load file which is ended with .css
       build.onLoad({ filter: /\.css$/ }, async (args: any) => {
-        console.log("onLoad", args);
-
         const { data, request } = await axios.get(args.path);
 
         const escaped = data
@@ -75,8 +71,6 @@ export const fetchPlugin = (inputCode: string) => {
       });
 
       build.onLoad({ filter: /.*/ }, async (args: any) => {
-        console.log("onLoad", args);
-
         const { data, request } = await axios.get(args.path);
 
         const result: esbuild.OnLoadResult = {

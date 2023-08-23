@@ -53,3 +53,6 @@ npm install @fortawesome/fontawesome-free@5.15.1 --legacy-peer-deps
 import React from "react"; 
 import ReactDOM from "react-dom"; 
 console.log(React, ReactDOM);
+
+
+https://fpt-software.udemy.com/course/react-and-typescript-build-a-portfolio-project/learn/lecture/24463328#questions

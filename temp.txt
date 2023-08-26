@@ -56,3 +56,5 @@ console.log(React, ReactDOM);
 
 
 https://fpt-software.udemy.com/course/react-and-typescript-build-a-portfolio-project/learn/lecture/24463328#questions
+
+npm install -g --save-exact lerna@3.22.1

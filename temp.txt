@@ -56,3 +56,27 @@ console.log(React, ReactDOM);
 
 
 https://fpt-software.udemy.com/course/react-and-typescript-build-a-portfolio-project/learn/lecture/24463328#questions
+
+npm install -g --save-exact lerna@3.22.1
+
+
+npx tsc --init
+
+
+
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint:   git submodule add <url> packages/local-client
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint:   git rm --cached packages/local-client
+hint:
+hint: See "git help submodule" for more information.
+
+
+git submodule add https://github.com/truongtran990/jbook.git packages/local-client

@@ -12,6 +12,8 @@ import {
 } from "../actions";
 import { Cell, CellTypes } from "../cell";
 import bundle from "../../bundler";
+import { RootState } from "../reducers";
+import { CellsState } from "../reducers/cellsReducer";
 
 // Here are action creator functions, which return the perspective action
 export const updateCell = (id: string, content: string): UpdateCellAction => {
@@ -92,6 +94,26 @@ export const fetchCells = () => {
         dispatch({
           type: ActionType.FETCH_CELLS_ERROR,
           payload: err.message,
+        });
+      }
+    }
+  };
+};
+
+export const saveCells = () => {
+  return async (dispatch: Dispatch<Action>, getState: () => RootState) => {
+    const {
+      cells: { data, order },
+    } = getState() as { cells: CellsState };
+    const cells = order.map((id) => data[id]);
+
+    try {
+      await axios.post("/cells", { cells });
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch({
+          type: ActionType.SAVE_CELLS_ERROR,
+          payload: error.message,
         });
       }
     }

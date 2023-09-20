@@ -5,7 +5,7 @@ import { Action } from "../actions";
 import { Cell } from "../cell";
 
 // define the interface for state
-interface CellsState {
+export interface CellsState {
   loading: boolean;
   error: string | null;
   order: string[];
@@ -25,6 +25,10 @@ const initialState: CellsState = {
 // define the reducer object, that will receive the current state, and action and then return the new state
 const reducer = produce((state: CellsState = initialState, action: Action) => {
   switch (action.type) {
+    case ActionType.SAVE_CELLS_ERROR:
+      state.error = action.payload;
+
+      return state;
     case ActionType.FETCH_CELLS:
       state.loading = true;
       state.error = null;

@@ -107,6 +107,8 @@ export const saveCells = () => {
     } = getState() as { cells: CellsState };
     const cells = order.map((id) => data[id]);
 
+    console.log("[INFO] saving cells - starting to call api : ", cells);
+
     try {
       await axios.post("/cells", { cells });
     } catch (error) {

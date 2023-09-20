@@ -107,3 +107,24 @@ How to start env in local
   2.1 
   ~ D:\Developments\typescript\learn-ts\jbook
   $ npm run start
+
+
+fetchCells
+   } catch (err) {
+      if (err instanceof Error) {
+        dispatch({
+          type: ActionType.FETCH_CELLS_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+ 
+saveCellss
+ } catch (err) {
+      if (err instanceof Error) {
+        dispatch({
+          type: ActionType.SAVE_CELLS_ERROR,
+          payload: err.message,
+        });
+      }
+    }

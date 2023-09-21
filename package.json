@@ -1,6 +1,6 @@
 {
   "name": "@jbook-truongtran99/local-client",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -66,5 +66,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "gitHead": "38b36d5603a8cd5397779ddcb9f7b1e56c9f8f4f"
 }

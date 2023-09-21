@@ -128,3 +128,6 @@ saveCellss
         });
       }
     }
+
+~ D:\Developments\typescript\learn-ts\jbook\packages
+$ lerna bootstrap
